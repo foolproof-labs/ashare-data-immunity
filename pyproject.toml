@@ -8,14 +8,13 @@ version = "0.1.0"
 description = "Data immunity for A-share daily bars: cleaning, board-aware price-limit and suspension detection, quality audit and snapshot versioning."
 readme = "README.md"
 requires-python = ">=3.11"
-license = { text = "MIT" }
+license = "MIT"
 keywords = ["a-share", "data-quality", "price-limit", "suspension", "cleaning", "snapshot", "quant"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Console",
     "Intended Audience :: Developers",
     "Intended Audience :: Financial and Insurance Industry",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
