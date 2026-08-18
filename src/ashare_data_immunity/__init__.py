@@ -3,7 +3,7 @@
 Cleaning (NaN/OHLCV), board-aware price-limit and suspension detection,
 quality audit (listing / coverage / continuity, with injectable data
 sources) and snapshot versioning (sha256 manifests).  Read-only by design:
-nothing here trades, prices, or decides — it keeps the data you feed it
+nothing here trades, prices, or decides 鈥?it keeps the data you feed it
 honest.
 """
 
@@ -17,7 +17,7 @@ from .cleaning import clean_bars, validate_bars
 from .limits import board_of, detect_limits, price_limit_ratio, suspension_days
 from .snapshot import build_snapshot, compare_snapshots
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 __all__ = [
     "board_of",
@@ -33,3 +33,4 @@ __all__ = [
     "suspension_days",
     "validate_bars",
 ]
+
