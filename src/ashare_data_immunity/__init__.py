@@ -3,7 +3,7 @@
 Cleaning (NaN/OHLCV), board-aware price-limit and suspension detection,
 quality audit (listing / coverage / continuity, with injectable data
 sources) and snapshot versioning (sha256 manifests).  Read-only by design:
-nothing here trades, prices, or decides 鈥?it keeps the data you feed it
+nothing here trades, prices, or decides —it keeps the data you feed it
 honest.
 """
 
