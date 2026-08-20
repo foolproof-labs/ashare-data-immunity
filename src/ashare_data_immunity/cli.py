@@ -58,7 +58,7 @@ def build_parser() -> argparse.ArgumentParser:
     limits = sub.add_parser("limits", help="price-limit and suspension detection")
     limits.add_argument("--bars", required=True)
     limits.add_argument("--code", required=True)
-    limits.add_argument("--st", action="store_true", help="ST status (main board -> 5%)")
+    limits.add_argument("--st", action="store_true", help="ST status (main board -> 10 percent)")
 
     audit = sub.add_parser("audit", help="quality audit")
     audit.add_argument("--watchlist", required=True, help="watchlist JSON (eligible_codes or members)")
