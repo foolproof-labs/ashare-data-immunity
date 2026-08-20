@@ -1,5 +1,10 @@
 # ashare-data-immunity
 
+![PyPI version](https://img.shields.io/pypi/v/ashare-data-immunity.svg)
+![PyPI downloads](https://img.shields.io/pypi/dm/ashare-data-immunity.svg)
+![CI](https://github.com/foolproof-labs/ashare-data-immunity/actions/workflows/ci.yml/badge.svg)
+![License](https://img.shields.io/badge/license-MIT-blue)
+
 ## 中文说明
 
 `ashare-data-immunity` 面向 A 股日线数据质量检查。它可以校验和清洗
