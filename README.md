@@ -10,6 +10,14 @@ production A-share pipeline; board rules follow the current exchange
 conventions and should be re-checked against the exchanges' rule
 documents before you rely on them.
 
+## 中文简介
+
+`ashare-data-immunity` 面向 A 股日线数据质量检查。它可以校验和清洗
+OHLCV 数据，按板块识别涨跌停和停牌，检查上市状态、覆盖范围与日期连续性，
+并用 SHA-256 清单记录数据快照。它只负责发现和标记数据问题，不提供选股、
+荐股或交易决策。主板风险警示股票（ST、*ST）的涨跌停按当前 10% 规则处理，
+具体规则仍应以交易所最新公告为准。
+
 ## Why this exists
 
 A-share daily data is not born clean. Vendors ship NaN closes, negative
@@ -24,8 +32,8 @@ does not trade —it makes the data you already have **honest**:
 - **clean** —flag or sanitize non-finite values, non-positive prices,
   OHLC inconsistencies (high below max(open, close), low above
   min(open, close)), negative volume;
-- **limits** —board-aware price-limit detection (main ±10%, STAR and
-  ChiNext ±20%, BSE ±30%, ST ±5% on the main board) against the previous
+- **limits** —board-aware price-limit detection (main and main-board ST
+  ±10%, STAR and ChiNext ±20%, BSE ±30%) against the previous
   close with tick rounding tolerance, plus a documented suspension
   heuristic (zero volume, or no prices on a dated row);
 - **audit** —daily quality audit: are watched codes still listed, does
@@ -83,18 +91,18 @@ imm snapshot-compare --before manifests/v1.json --after manifests/v2.json
 
 | Command | What it does |
 | --- | --- |
-| `clean` | Validate bars (missing/non-finite/non-positive fields, OHLC consistency, negative volume); optionally sanitize (non-finite and non-positive prices →?`None`, volume kept ≥0) and optionally drop non-positive rows |
+| `clean` | Validate bars (missing/non-finite/non-positive fields, OHLC consistency, negative volume); optionally sanitize (non-finite and non-positive prices -> `None`, volume kept >=0) and optionally drop non-positive rows |
 | `limits` | Board classification, price-limit events (up/down with ratio and limit price) and suspension days for one code |
 | `audit` | Listing (codes not in the injected universe), history coverage, calendar continuity; appends a JSONL record per day |
 | `snapshot` | sha256 manifest of a file list with name + cutoff |
 | `snapshot-compare` | added / removed / changed files between two manifests |
 | `version` | Print version |
 
-## Board rules (v0.1)
+## Board rules (v0.1, current from 2026-07-06)
 
 | Board | Prefixes | Limit |
 | --- | --- | --- |
-| main | 60xxxx / 00xxxx | ±10% (ST: ±5%) |
+| main | 60xxxx / 00xxxx | ±10% (including ST / *ST) |
 | STAR | 688 / 689 | ±20% |
 | ChiNext | 300 / 301 | ±20% |
 | Beijing SE | 43x / 83x / 87x / 920 | ±30% |
@@ -102,9 +110,12 @@ imm snapshot-compare --before manifests/v1.json --after manifests/v2.json
 
 Limit detection compares `close` against `round(prev_close × (1 ± ratio), 2)`
 with a default tolerance of 0.001 for vendor rounding conventions. The
-first bar has no reference and is never flagged. **Verify the tables
-against the current exchange rule documents before production use** —the
-tool's job is to make the rules explicit, not to invent them.
+first bar has no reference and is never flagged. The main-board 10% rule,
+including risk-warning stocks, follows the Shanghai Stock Exchange's
+[Trading Rules (2026 revision)](https://www.sse.com.cn/lawandrules/sselawsrules2025/stocks/exchange/c/c_20260424_10816482.shtml),
+effective 2026-07-06. **Verify the tables against the current exchange rule
+documents before production use** —the tool's job is to make the rules
+explicit, not to invent them.
 
 Suspension heuristic: a dated row with zero volume, or with no prices at
 all, is a suspension day. Documented, not hidden —and toggleable

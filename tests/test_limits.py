@@ -34,7 +34,7 @@ def test_price_limit_ratios() -> None:
     assert price_limit_ratio("688001") == pytest.approx(0.20)
     assert price_limit_ratio("300750") == pytest.approx(0.20)
     assert price_limit_ratio("920001") == pytest.approx(0.30)
-    assert price_limit_ratio("600000", is_st=True) == pytest.approx(0.05)
+    assert price_limit_ratio("600000", is_st=True) == pytest.approx(0.10)
     assert price_limit_ratio("688001", is_st=True) == pytest.approx(0.20)  # STAR ST stays 20%
 
 
@@ -72,15 +72,16 @@ def test_rounding_tolerance() -> None:
     assert len(events) == 1
 
 
-def test_st_ratio_narrows_limit() -> None:
+def test_st_ratio_uses_current_main_board_limit() -> None:
     bars = [
         _bar("2026-08-03", close=10.00),
-        _bar("2026-08-04", close=10.50),  # +5%: ST limit up, but NOT a main-board limit
+        _bar("2026-08-04", close=11.00),  # +10%: current ST limit up
     ]
-    assert detect_limits(bars, "600000") == []  # +5% is not +10%
+    assert detect_limits(bars, "600000")
     events = detect_limits(bars, "600000", is_st=True)
     assert len(events) == 1
     assert events[0]["limit_up"] is True
+    assert events[0]["ratio"] == pytest.approx(0.10)
 
 
 def test_star_20_percent() -> None:

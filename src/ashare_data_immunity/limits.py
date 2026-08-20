@@ -1,7 +1,8 @@
 """Board-aware price-limit and suspension detection for A-share daily bars.
 
-A-share price limits vary by board; ST status narrows the main-board limit
-to 5%.  Detection uses the previous day's close and the standard tick
+A-share price limits vary by board; main-board ST status uses the same 10%
+limit as ordinary main-board stocks under the 2026 rule.  Detection uses
+the previous day's close and the standard tick
 rounding (0.01), with a small tolerance for vendor rounding conventions.
 
 Suspension heuristic (standard): a trading day with zero volume, or with
@@ -22,7 +23,9 @@ BOARD_RULES: dict[str, dict[str, Any]] = {
     "bse": {"ratio": 0.30, "label": "Beijing SE (8xx / 4xx / 920)"},
     "unknown": {"ratio": 0.10, "label": "unrecognized prefix (assumed main)"},
 }
-ST_RATIO = 0.05
+# The 2026 Shanghai Stock Exchange trading rules, effective 2026-07-06,
+# apply the main-board 10% limit to risk-warning stocks as well.
+ST_RATIO = 0.10
 TICK = 0.01
 ROUNDING_TOLERANCE = 0.001
 
@@ -45,7 +48,7 @@ def board_of(code: str) -> str:
 
 
 def price_limit_ratio(code: str, *, is_st: bool = False) -> float:
-    """The daily price-limit ratio for a code (ST narrows the main board)."""
+    """Return the daily price-limit ratio for a code, including ST status."""
     board = board_of(code)
     if is_st and board in ("main", "unknown"):
         return ST_RATIO
