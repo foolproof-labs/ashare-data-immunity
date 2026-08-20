@@ -1,5 +1,12 @@
 # ashare-data-immunity
 
+## 中文说明
+
+`ashare-data-immunity` 面向 A 股日线数据质量检查。它可以校验和清洗
+OHLCV 数据，按板块识别涨跌停和停牌，检查上市状态、覆盖范围与日期连续性，
+并用 SHA-256 清单记录数据快照。它只负责发现和标记数据问题，不提供选股、
+荐股或交易决策。主板风险警示股票（ST、*ST）的涨跌停按当前 10% 规则处理。
+
 **Data immunity for A-share daily bars**: cleaning (NaN / OHLCV
 validation), board-aware price-limit and suspension detection, quality
 audit (listing / coverage / continuity) and snapshot versioning (sha256
